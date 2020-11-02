@@ -4,4 +4,5 @@
 /img
 /movies
 *.rpgproject
+*.rpgsave
 package.json

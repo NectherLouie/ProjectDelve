@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//  Galv's Quest Log
+//  Galv's Quest Log (Modified)
 //-----------------------------------------------------------------------------
 //  For: RPGMAKER MV
 //  Galv_QuestLog.js
@@ -29,11 +29,11 @@ Galv.QUEST = Galv.QUEST || {};          // Galv's stuff
  * @author Galv - galvs-scripts.com
  *
  * @param File
- * @desc The name of your quests txt file (without .txt).
+ * @desc The name of your quests json file (without .json).
  * @default Quests
  *
  * @param Folder
- * @desc The folder name in your project where the txt file is located.
+ * @desc The folder name in your project where the json file is located.
  * @default data
  *
  * @param Separator Character
@@ -282,19 +282,91 @@ Galv.QUEST = Galv.QUEST || {};          // Galv's stuff
 //-----------------------------------------------------------------------------
 
 Galv.QUEST.file = {};
-Galv.QUEST.file.getString = function(filePath) {
+Galv.QUEST.file.getString = function(filePath)
+{
 	var request = new XMLHttpRequest();
 	request.open("GET", filePath);
 	request.overrideMimeType('application/json');
-	request.onload = function() {
-		if (request.status < 400) {
-			Galv.QUEST.createQuests(request.responseText);
+	request.onload = function()
+	{
+		if (request.status < 400)
+		{
+			Galv.QUEST.createQuestsFromJson(request.responseText);
 		}
 	};
 	request.send();
 };
 
-Galv.QUEST.createQuests = function(string) {
+Galv.QUEST.createQuestsFromJson = function(responseText)
+{
+	var responseData = JSON.parse(responseText);
+
+	var r = {
+		"1": {
+			"desc": [
+				"Find the \\c[2]Cliche Ruby,Bring ruby to pink fairy\r",
+				"Well... the fairy tricked us,another resolution here,another resolution here\r",
+				"The pink fairy has tasked you\r",
+				"with the hard task of saving the\r"
+			],
+			"name": "Save the world!",
+			"difficulty": "1",
+			"category": "0"
+		}
+	}
+
+	var output = Galv.QUEST.txt = {};
+
+	var _quests = responseData.quests;
+
+	for (var questIndex = 0; questIndex < _quests.length; ++questIndex)
+	{
+		var questData = _quests[questIndex];
+
+		var outputQuest = output[questIndex + 1] = {};
+		outputQuest.name = questData.id;
+		outputQuest.difficulty = questData.difficulty;
+		outputQuest.category = questData.categoryId;
+
+		outputQuest.desc = [];
+		
+		// objectives
+		var objectives = "";
+		for (var i = 0; i < questData.objectives.length; ++i)
+		{
+			objectives += questData.objectives[i];
+
+			if (i < questData.objectives.length - 1)
+			{
+				objectives += ",";
+			}
+		}
+
+		outputQuest.desc.push(objectives);
+
+		// resolutions
+		var resolutions = "";
+		for (var i = 0; i < questData.resolutions.length; ++i)
+		{
+			resolutions += questData.resolutions[i];
+
+			if (i < questData.resolutions.length - 1)
+			{
+				resolutions += ",";
+			}
+		}
+		
+		outputQuest.desc.push(resolutions);
+		outputQuest.desc.push(questData.description);
+
+		output[questIndex + 1] = outputQuest
+	}
+
+	Galv.QUEST.txt = output;
+}
+
+Galv.QUEST.createQuests = function(string)
+{
 	var lines = string.split("\n");
 	var bIndex = 0;
 	var record = false;
@@ -325,12 +397,19 @@ Galv.QUEST.createQuests = function(string) {
 	};
 };
 
-Galv.QUEST.fileName = function() {
-	if (!Galv.QUEST.txt) {
+Galv.QUEST.fileName = function()
+{
+	if (!Galv.QUEST.txt)
+	{
 		var filename = PluginManager.parameters('Galv_QuestLog')["File"];;
 		var folder = PluginManager.parameters('Galv_QuestLog')["Folder"];
-		if (folder !== "") folder = folder + "/";
-		Galv.QUEST.file.getString(folder + filename + ".txt");
+		
+		if (folder !== "")
+		{
+			folder = folder + "/";
+		}
+
+		Galv.QUEST.file.getString(folder + filename + ".json");
 	};
 }();
 

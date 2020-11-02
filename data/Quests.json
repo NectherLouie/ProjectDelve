@@ -1,0 +1,20 @@
+{
+    "quests": [
+        {
+            "id": "Name of Quest",
+            "difficulty": 1,
+            "categoryId": 0,
+            "objectives": [
+                "Objective \\c[2]1",
+                "\\c[2]Objective\\c[0] 2"
+            ],
+            "resolutions": [
+                "Resolution 1",
+                "Resolution 2",
+                "Resolution \\c[2]3"
+            ],
+            "description": "Bacon ipsum dolor amet tongue prosciutto pork chop swine pork loin. Short ribs sausage beef brisket, rump doner prosciutto capicola tenderloin ribeye turducken beef ribs meatball. Meatloaf ham doner ribeye chicken burgdoggen, ham hock shank swine. Brisket pork chop chislic, bacon jerky shank cupim tenderloin pastrami boudin fatback pork cow sausage jowl. Venison beef burgdoggen picanha rump short loin tri-tip filet mignon, boudin ham."
+        }
+    ]
+}
+
