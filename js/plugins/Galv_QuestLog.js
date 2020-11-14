@@ -291,13 +291,13 @@ Galv.QUEST.file.getString = function(filePath)
 	{
 		if (request.status < 400)
 		{
-			Galv.QUEST.createQuestsFromJson(request.responseText);
+			Galv.QUEST.createQuests(request.responseText);
 		}
 	};
 	request.send();
 };
 
-Galv.QUEST.createQuestsFromJson = function(responseText)
+Galv.QUEST.createQuests = function(responseText)
 {
 	var responseData = JSON.parse(responseText);
 
@@ -357,45 +357,18 @@ Galv.QUEST.createQuestsFromJson = function(responseText)
 		}
 		
 		outputQuest.desc.push(resolutions);
-		outputQuest.desc.push(questData.description);
+
+		// desecription
+		for (var i = 0; i < questData.description.length; ++i)
+		{
+			outputQuest.desc.push(questData.description[i]);
+		}
 
 		output[questIndex + 1] = outputQuest
 	}
 
 	Galv.QUEST.txt = output;
 }
-
-Galv.QUEST.createQuests = function(string)
-{
-	var lines = string.split("\n");
-	var bIndex = 0;
-	var record = false;
-	Galv.QUEST.txt = {};
-
-	for (var i = 0; i < lines.length; i++) {
-		if (lines[i][0] == '<') {
-			if (lines[i].contains('</quest>')) {
-				record = false;
-			} else if (lines[i].contains('<quest')) {
-				var qId = lines[i].match(/<quest (.*):(.*)>/i);
-				if (qId) {
-					bIndex = Number(qId[1]);
-					Galv.QUEST.txt[bIndex] = {};
-					Galv.QUEST.txt[bIndex].desc = [];
-					
-					var s = qId[2].split('|');
-					Galv.QUEST.txt[bIndex].name = s[0] || '???';
-					Galv.QUEST.txt[bIndex].difficulty = s[1] || '???';
-					Galv.QUEST.txt[bIndex].category = s[2] || 0;
-					
-					record = true;
-				}
-			} 
-		} else if (record) {
-			Galv.QUEST.txt[bIndex].desc.push(lines[i]);
-		}
-	};
-};
 
 Galv.QUEST.fileName = function()
 {
@@ -534,6 +507,14 @@ Galv.QUEST.complete = function(id,hidePopup) {
 	Galv.QUEST.put(id,1);
 	if (!hidePopup) Galv.QUEST.popup(id,1);
 };
+
+Galv.QUEST.activateAll = function()
+{
+	for (var id of Object.keys(Galv.QUEST.txt))
+	{
+		this.activate(parseInt(id), true);
+	}
+}
 
 Galv.QUEST.activate = function(id,hidePopup) {
 	Galv.QUEST.create(id);
