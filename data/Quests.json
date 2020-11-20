@@ -1,1 +1,1 @@
-{"quests":[{"id":"In need of an ore!","difficulty":1,"categoryId":0,"objectives":["Gather 10 Iron Ores"],"resolutions":["Good Job!"],"description":["The Master Smith requires you to have","materials in order to craft anything."]}]}
+{"quests":[{"id":"A Delver needs a sword","difficulty":1,"categoryId":0,"objectives":["Craft a \\c[2]Delver\u0027s Sword\\c[0]"],"resolutions":["Craft a \\c[2]Delver\u0027s Sword\\c[0]"],"description":["Speak to \\c[1]Master Smith\\c[0] to","know the materials and","cost needed to craft a","\\c[2]Delver\u0027s Sword\\c[0]"]}]}
